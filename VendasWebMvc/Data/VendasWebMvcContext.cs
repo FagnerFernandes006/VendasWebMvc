@@ -8,7 +8,7 @@ using VendasWebMvc.Models;
 namespace VendasWebMvc.Data
 {
     public class VendasWebMvcContext : DbContext
-    {
+    {   
         public VendasWebMvcContext (DbContextOptions<VendasWebMvcContext> options)
             : base(options)
         {
