@@ -2,6 +2,7 @@
 using System.Linq;
 using VendasWebMvc.Data;
 using VendasWebMvc.Models;
+using System;
 
 namespace VendasWebMvc.Services
 {
@@ -17,6 +18,12 @@ namespace VendasWebMvc.Services
         public List<Vendedor> FindAll()
         {
             return _context.Vendedor.ToList();
+        }
+
+        public void Inserir(Vendedor obj)
+        {
+            _context.Add(obj);
+            _context.SaveChanges();
         }
     }
 }
