@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using VendasWebMvc.Models;
 using System;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 namespace VendasWebMvc.Services
 {
     public class DepartamentoService
@@ -13,9 +16,9 @@ namespace VendasWebMvc.Services
         {
             _context = context;
         }
-        public List<Departamento> FindAll()
+        public async Task<List<Departamento>> FindAllAsync()
         {
-            return _context.Departamento.OrderBy(x => x.Nome).ToList();
+            return await _context.Departamento.OrderBy(x => x.Nome).ToListAsync();
         }
     }
 }
