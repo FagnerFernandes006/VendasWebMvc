@@ -8,17 +8,27 @@ namespace VendasWebMvc.Models
     public class Vendedor
     {
         public int Id { get; set; }
+     
+        [Required(ErrorMessage = "{0} não Preenchido")] //Campo requerido
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "{0} deve ser entre {2} a {1} caracteres")] // Tamanho máximo da string e mínimo de caracteres 
         public string Nome { get; set; }
+      
+        [Required(ErrorMessage = "{0} não Preenchido")]
         [DataType(DataType.EmailAddress)] //torna um link de email 
+        [EmailAddress(ErrorMessage = "Insira um email válido")] //Formato de email valido
         public string Email { get; set; }
-
+      
         [Display(Name = "Data de Nascimento")] //Exibir na view ao inves do "DataNascimento"
         [DataType(DataType.Date)] //Somente a data sem o horário
+        [Required(ErrorMessage = "{0} não Preenchido")]
         public DateTime DataNascimento { get; set; }
-
+    
         [Display(Name = "Salário Base")] //Exibir na view ao inves do "SalarioBase"
         [DisplayFormat(DataFormatString = "{0:F2}")] //Exibir com duas casas decimais
+        [Required(ErrorMessage = "{0} não Preenchido")]
+        [Range(100.0, 50000.0, ErrorMessage = "{0} deve ser entre {1} a {2}")] // mínimo e máxima do salario
         public double SalarioBase { get; set; }
+     
         public Departamento Departamento { get; set; }
         public int DepartamentoId { get; set; }
         public ICollection<RegistroVendas> Vendas { get; set; } = new List<RegistroVendas>();

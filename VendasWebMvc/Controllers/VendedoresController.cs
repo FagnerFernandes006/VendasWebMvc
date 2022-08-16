@@ -35,6 +35,12 @@ namespace VendasWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Criar(Vendedor vendedor)
         {
+            if (!ModelState.IsValid) // Teste de validação
+            {
+                var departamentos = _departamentoService.FindAll();
+                var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
             _vendedorService.Inserir(vendedor);
             return RedirectToAction(nameof(Index));
         }
@@ -94,6 +100,12 @@ namespace VendasWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Editar(int id, Vendedor vendedor)
         {
+            if (!ModelState.IsValid) // Teste de validação
+            {
+                var departamentos = _departamentoService.FindAll();
+                var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
+                return View(viewModel);
+            }
             if (id != vendedor.Id)
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não corresponde com o da chamada!" });
