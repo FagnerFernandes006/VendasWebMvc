@@ -34,9 +34,16 @@ namespace VendasWebMvc.Services
         }
         public async Task RemoverAsync(int id)
         {
-            var obj = await _context.Vendedor.FindAsync(id);
-            _context.Vendedor.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = await _context.Vendedor.FindAsync(id);
+                _context.Vendedor.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new IntegrityException(ex.Message);
+            }
         }
         public async Task UpdateAsync(Vendedor obj)
         {

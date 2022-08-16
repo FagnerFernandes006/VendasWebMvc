@@ -30,7 +30,7 @@ namespace VendasWebMvc.Controllers
             var departamentos = await _departamentoService.FindAllAsync();
             var viewModel = new VendedorFormViewModel { Departamentos = departamentos };
             return View(viewModel);
-        }   
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -47,9 +47,9 @@ namespace VendasWebMvc.Controllers
         }
         public async Task<IActionResult> Deletar(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
-                return RedirectToAction(nameof(Erro), new { message = "Id não foi fornecido!"});
+                return RedirectToAction(nameof(Erro), new { message = "Id não foi fornecido!" });
             }
             var obj = await _vendedorService.FindByIdAsync(id.Value);
             if (obj == null)
@@ -62,8 +62,15 @@ namespace VendasWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deletar(Vendedor vendedor)
         {
-            await _vendedorService.RemoverAsync(vendedor.Id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _vendedorService.RemoverAsync(vendedor.Id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Erro), new { message = "Não é possível deletar um vendedor que possui vendas!" });
+            }
         }
 
         public async Task<IActionResult> Detalhes(int? id)
@@ -94,7 +101,7 @@ namespace VendasWebMvc.Controllers
             }
 
             List<Departamento> departamentos = await _departamentoService.FindAllAsync();
-            VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos};
+            VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos };
             return View(viewModel);
         }
         [HttpPost]
@@ -129,7 +136,7 @@ namespace VendasWebMvc.Controllers
                 Message = message,
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             };
-           return View(viewModel);
+            return View(viewModel);
         }
     }
 }
