@@ -21,7 +21,7 @@ namespace VendasWebMvc.Controllers
         }
         public async Task<IActionResult> BuscaSimples(DateTime? minDate, DateTime? maxDate)
         {
-            if(!minDate.HasValue)
+            if (!minDate.HasValue)
             {
                 minDate = new DateTime(DateTime.Now.Year, 1, 1);
             }
@@ -34,9 +34,20 @@ namespace VendasWebMvc.Controllers
             var result = await _registroVendasService.FindByDateAsync(minDate, maxDate);
             return View(result);
         }
-        public async Task<IActionResult> BuscaAgrupada()
+        public async Task<IActionResult> BuscaAgrupada(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            if (!minDate.HasValue)
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+            if (!maxDate.HasValue)
+            {
+                maxDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+            var result = await _registroVendasService.FindByDateGroupAsync(minDate, maxDate);
+            return View(result);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace VendasWebMvc.Data
             {
                 return; // o banco de dados ja foi populado
             }
-            Departamento d1 = new Departamento(1, "Eletronicos");
+            Departamento d1 = new Departamento(1, "Eletrônicos");
             Departamento d2 = new Departamento(2, "Computadores");
             Departamento d3 = new Departamento(3, "Peças");
             Departamento d4 = new Departamento(4, "Usados");
