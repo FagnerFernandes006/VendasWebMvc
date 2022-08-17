@@ -28,8 +28,10 @@ namespace VendasWebMvc.Models
         [Required(ErrorMessage = "{0} não Preenchido")]
         [Range(100.0, 50000.0, ErrorMessage = "{0} deve ser entre {1} a {2}")] // mínimo e máxima do salario
         public double SalarioBase { get; set; }
-     
         public Departamento Departamento { get; set; }
+
+
+        [Display(Name = "Departamento")]
         public int DepartamentoId { get; set; }
         public ICollection<RegistroVendas> Vendas { get; set; } = new List<RegistroVendas>();
 
