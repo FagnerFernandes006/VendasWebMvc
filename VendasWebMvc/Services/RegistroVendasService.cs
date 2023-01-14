@@ -42,5 +42,14 @@ namespace VendasWebMvc.Services
             }
             return await result.Include(x => x.Vendedor).Include(x => x.Vendedor.Departamento).OrderByDescending(x => x.Data).GroupBy(x => x.Vendedor.Departamento).ToListAsync();
         }
+        public async Task<List<RegistroVendas>> FindAllAsync()
+        {
+            return await _context.RegistroVendas.Include(x => x.Vendedor).ToListAsync();
+        }
+        public async Task InserirAsync(RegistroVendas obj)
+        {
+            _context.Add(obj);
+            await _context.SaveChangesAsync();
+        }
     }
 }

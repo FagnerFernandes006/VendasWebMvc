@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using VendasWebMvc.Models;
+using VendasWebMvc.Models.ViewModels;
 using VendasWebMvc.Services;
 
 namespace VendasWebMvc.Controllers
@@ -9,10 +11,12 @@ namespace VendasWebMvc.Controllers
     public class RegistroVendasController : Controller
     {
         private readonly RegistroVendasService _registroVendasService;
+        private readonly VendedorService _vendedorService;
 
-        public RegistroVendasController(RegistroVendasService registroVendasService)
+        public RegistroVendasController(RegistroVendasService registroVendasService, VendedorService vendedorService)
         {
             _registroVendasService = registroVendasService;
+            _vendedorService = vendedorService;
         }
 
         public IActionResult Index()
@@ -48,6 +52,25 @@ namespace VendasWebMvc.Controllers
             ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
             var result = await _registroVendasService.FindByDateGroupAsync(minDate, maxDate);
             return View(result);
+        }
+        public async Task<IActionResult> Criar()
+        {
+            var vendedores = await _vendedorService.FindAllAsync();
+            var viewModel = new RegistroVendasFormViewModel { Vendedores = vendedores };
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Criar(RegistroVendas registroVendas)
+        {
+            if (!ModelState.IsValid) // Teste de validação
+            {
+                var vendedores = await _vendedorService.FindAllAsync();
+                var viewModel = new RegistroVendasFormViewModel {RegistroVendas = registroVendas, Vendedores = vendedores };
+                return View(viewModel);
+            }
+            await _registroVendasService.InserirAsync(registroVendas);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

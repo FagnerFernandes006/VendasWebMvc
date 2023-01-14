@@ -20,7 +20,7 @@ namespace VendasWebMvc.Services
 
         public async Task<List<Vendedor>> FindAllAsync()
         {
-            return await _context.Vendedor.ToListAsync();
+            return await _context.Vendedor.Include(x => x.Departamento).Include(y => y.Empresa).ToListAsync();
         }
 
         public async Task InserirAsync(Vendedor obj)
@@ -30,7 +30,7 @@ namespace VendasWebMvc.Services
         }
         public async Task<Vendedor> FindByIdAsync(int id)
         {
-            return await _context.Vendedor.Include(obj => obj.Departamento).FirstOrDefaultAsync(obj => obj.Id == id);
+            return await _context.Vendedor.Include(obj => obj.Departamento).Include(objEmp => objEmp.Empresa).FirstOrDefaultAsync(obj => obj.Id == id);
         }
         public async Task RemoverAsync(int id)
         {

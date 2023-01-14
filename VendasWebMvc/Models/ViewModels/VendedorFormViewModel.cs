@@ -6,5 +6,6 @@ namespace VendasWebMvc.Models.ViewModels
     {
         public Vendedor Vendedor { get; set; }
         public ICollection<Departamento> Departamentos { get; set; }
+        public ICollection<Empresa> Empresas { get; set; }
     }
 }

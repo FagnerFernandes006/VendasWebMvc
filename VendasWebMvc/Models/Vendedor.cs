@@ -29,17 +29,19 @@ namespace VendasWebMvc.Models
         [Range(100.0, 50000.0, ErrorMessage = "{0} deve ser entre {1} a {2}")] // mínimo e máxima do salario
         public double SalarioBase { get; set; }
         public Departamento Departamento { get; set; }
-
-
+        public Empresa Empresa { get; set; }
         [Display(Name = "Departamento")]
         public int DepartamentoId { get; set; }
+
+        [Display(Name = "Empresa")]
+        public int EmpresaId { get; set; }
         public ICollection<RegistroVendas> Vendas { get; set; } = new List<RegistroVendas>();
 
         public Vendedor()
         {
         }
 
-        public Vendedor(int id, string nome, string email, DateTime dataNascimento, double salarioBase, Departamento departamento)
+        public Vendedor(int id, string nome, string email, DateTime dataNascimento, double salarioBase, Departamento departamento, Empresa empresa)
         {
             Id = id;
             Nome = nome;
@@ -47,6 +49,7 @@ namespace VendasWebMvc.Models
             DataNascimento = dataNascimento;
             SalarioBase = salarioBase;
             Departamento = departamento;
+            Empresa = empresa;
         }
 
         public void AddVendas(RegistroVendas rv)

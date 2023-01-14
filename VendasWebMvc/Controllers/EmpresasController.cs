@@ -1,52 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VendasWebMvc.Models;
-using VendasWebMvc.Services;
-using VendasWebMvc.Models.ViewModels;
-using System.Collections.Generic;
-using VendasWebMvc.Services.Exceptions;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using VendasWebMvc.Data;
+using VendasWebMvc.Models;
+using VendasWebMvc.Models.ViewModels;
+using VendasWebMvc.Services;
 
 namespace VendasWebMvc.Controllers
 {
-    public class VendedoresController : Controller
+    public class EmpresasController : Controller
     {
-        private readonly VendedorService _vendedorService;
-        private readonly DepartamentoService _departamentoService;
         private readonly EmpresaService _empresaService;
 
-        public VendedoresController(VendedorService vendedorService, DepartamentoService departamentoService, EmpresaService empresaService)
+        public EmpresasController(EmpresaService empresaService)
         {
-            _vendedorService = vendedorService;
             _empresaService = empresaService;
-            _departamentoService = departamentoService;
         }
+
         public async Task<IActionResult> Index()
         {
-            var list = await _vendedorService.FindAllAsync();
+            var list = await _empresaService.FindAllAsync();
             return View(list);
         }
         public async Task<IActionResult> Criar()
         {
-            var departamentos = await _departamentoService.FindAllAsync();
             var empresas = await _empresaService.FindAllAsync();
-            var viewModel = new VendedorFormViewModel { Departamentos = departamentos, Empresas = empresas };
+            var viewModel = new EmpresaFormViewModel { };
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Criar(Vendedor vendedor)
+        public async Task<IActionResult> Criar(Empresa empresa)
         {
             if (!ModelState.IsValid) // Teste de validação
             {
-                var departamentos = await _departamentoService.FindAllAsync();
-                var empresas = await _empresaService.FindAllAsync();
-                var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos, Empresas = empresas };
+                var viewModel = new EmpresaFormViewModel { Empresa = empresa };
                 return View(viewModel);
             }
-            await _vendedorService.InserirAsync(vendedor);
+            await _empresaService.InserirAsync(empresa);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Deletar(int? id)
@@ -55,7 +51,7 @@ namespace VendasWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não foi fornecido!" });
             }
-            var obj = await _vendedorService.FindByIdAsync(id.Value);
+            var obj = await _empresaService.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não encontrado!" });
@@ -64,16 +60,21 @@ namespace VendasWebMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Deletar(Vendedor vendedor)
+        public async Task<IActionResult> Deletar(Empresa empresa)
         {
             try
             {
-                await _vendedorService.RemoverAsync(vendedor.Id);
+                var vendedor = await _empresaService.FindByIdAsyncVendedor(empresa.Id);
+                if (vendedor != null)
+                {
+                    return RedirectToAction(nameof(Erro), new { message = "Não é possível deletar esta empresa, pois pussui vendedores" });
+                }
+                await _empresaService.RemoverAsync(empresa.Id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return RedirectToAction(nameof(Erro), new { message = "Não é possível deletar um vendedor que possui vendas!" });
+                return RedirectToAction(nameof(Erro), new { message = "Não é possível deletar esta empresa" });
             }
         }
 
@@ -83,7 +84,7 @@ namespace VendasWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não foi fornecido!" });
             }
-            var obj = await _vendedorService.FindByIdAsync(id.Value);
+            var obj = await _empresaService.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não encontrado!" });
@@ -97,36 +98,31 @@ namespace VendasWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não foi fornecido!" });
             }
-            var obj = await _vendedorService.FindByIdAsync(id.Value);
+            var obj = await _empresaService.FindByIdAsync(id.Value);
 
             if (obj == null)
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não encontrado!" });
             }
-
-            List<Departamento> departamentos = await _departamentoService.FindAllAsync();
-            List<Empresa> empresas = await _empresaService.FindAllAsync();
-            VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos, Empresas = empresas };
+            EmpresaFormViewModel viewModel = new EmpresaFormViewModel { Empresa = obj };
             return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(int id, Vendedor vendedor)
+        public async Task<IActionResult> Editar(int id, Empresa empresa)
         {
             if (!ModelState.IsValid) // Teste de validação
             {
-                var departamentos = await _departamentoService.FindAllAsync();
-                var empresas = await _empresaService.FindAllAsync();
-                var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos, Empresas = empresas };
+                var viewModel = new EmpresaFormViewModel { Empresa = empresa };
                 return View(viewModel);
             }
-            if (id != vendedor.Id)
+            if (id != empresa.Id)
             {
                 return RedirectToAction(nameof(Erro), new { message = "Id não corresponde com o da chamada!" });
             }
             try
             {
-                await _vendedorService.UpdateAsync(vendedor);
+                await _empresaService.UpdateAsync(empresa);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException e)

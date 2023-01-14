@@ -1,0 +1,44 @@
+﻿@model VendasWebMvc.Models.ViewModels.EmpresaFormViewModel
+
+@{
+    ViewData["Title"] = "Novo Cadastro";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Empresas</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Criar">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Empresa.Nome" class="control-label"></label>
+                <input asp-for="Empresa.Nome" class="form-control" />
+                <span asp-validation-for="Empresa.Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Empresa.NomeFantasia" class="control-label"></label>
+                <input asp-for="Empresa.NomeFantasia" class="form-control" />
+                <span asp-validation-for="Empresa.NomeFantasia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Empresa.CNPJ" class="control-label"></label>
+                <input asp-for="Empresa.CNPJ" class="form-control" data-mask="00.000.000/0000-00"/>
+                <span asp-validation-for="Empresa.CNPJ" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Criar" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

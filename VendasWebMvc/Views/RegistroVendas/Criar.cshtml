@@ -1,0 +1,53 @@
+﻿@using VendasWebMvc.Models.Enums
+@model VendasWebMvc.Models.ViewModels.RegistroVendasFormViewModel
+
+@{
+    ViewData["Title"] = "Nova Venda";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Vendas</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Criar">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RegistroVendas.Data" class="control-label"></label>
+                <input asp-for="RegistroVendas.Data" class="form-control" />
+                <span asp-validation-for="RegistroVendas.Data" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegistroVendas.Qtde" class="control-label"></label>
+                <input asp-for="RegistroVendas.Qtde" class="form-control" />
+                <span asp-validation-for="RegistroVendas.Qtde" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegistroVendas.StatusVenda" class="control-label"></label>
+                <div class="form-group">
+                <select asp-for="RegistroVendas.StatusVenda" asp-items="Html.GetEnumSelectList<StatusVenda>()" class="form-control">
+                    <option selected="selected" value="">Selecione um status</option>
+                </select>
+                <span asp-validation-for="RegistroVendas.StatusVenda" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+            <label asp-for="RegistroVendas.VendedorId" class="control-label"></label>
+             <select asp-for="RegistroVendas.VendedorId" asp-items="@(new SelectList(Model.Vendedores,"Id", "Nome"))" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Criar" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

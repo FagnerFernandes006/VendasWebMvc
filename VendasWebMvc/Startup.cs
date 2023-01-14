@@ -43,6 +43,7 @@ namespace VendasWebMvc
                    options.UseMySql(Configuration.GetConnectionString("VendasWebMvcContext"), builder =>
                       builder.MigrationsAssembly("VendasWebMvc")));
             services.AddScoped<SeedingService>();
+            services.AddScoped<EmpresaService>();
             services.AddScoped<VendedorService>();
             services.AddScoped<DepartamentoService>();
             services.AddScoped<RegistroVendasService>();
